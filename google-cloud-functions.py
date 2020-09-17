@@ -3,6 +3,12 @@ import requests
 import flask
 
 
+# requirements.py
+"""
+requests>=2.24
+"""
+
+
 def check_data(request):
     
     if request.method == 'OPTIONS':
