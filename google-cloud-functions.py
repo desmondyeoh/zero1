@@ -8,7 +8,6 @@ import flask
 requests>=2.24
 """
 
-
 def check_data(request):
     
     if request.method == 'OPTIONS':
@@ -23,27 +22,29 @@ def check_data(request):
         return ('', 204, headers)
 
     elif request.method == 'POST':
+        try:
+            request_json = request.get_json()
+            email = request_json['email']
+            password = request_json['password']
+            phone = request_json['phone']
         
-        request_json = request.get_json()
-        email = request_json['email']
-        password = request_json['password']
-        phone = request_json['phone']
-    
-        # Set CORS headers for the main request
-        headers = {
-            'Content-Type':'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': 'Content-Type',
-        }
+            # Set CORS headers for the main request
+            headers = {
+                'Content-Type':'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type',
+            }
 
-        # END CORS
+            # END CORS
 
-        c = Zero1Checker()
-        c.login(email=email, password=password)
-        c.authenticate()
-        data_usage_GB = c.get_usage(phone_num=phone)
-        print('Data used: %.2f GB' % data_usage_GB)
-        return ({'data': data_usage_GB}, 200, headers)
+            c = Zero1Checker()
+            c.login(email=email, password=password)
+            c.authenticate()
+            data_usage_GB = c.get_usage(phone_num=phone)
+            print('Data used: %.2f GB' % data_usage_GB)
+            return ({'data': data_usage_GB}, 200, headers)
+        except:
+            return ({'data': 'Internal Server Error'}, 500, headers)
     
     else:
         return ('Not Found', 404)
