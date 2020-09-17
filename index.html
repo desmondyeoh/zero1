@@ -72,13 +72,17 @@
 	<p id="desc">Check Zero1 Data Usage Here!</p>
 	<form action="/" id="checkForm">
 		<label>Email
-			<input type="email" id="email"/>
+			<input type="email" id="email" autofocus/>
 		</label>
 		<label>Phone
 			<input type="phone" id="phone"/>
 		</label>
 		<label>Password
 			<input type="password" id="password"/>
+		</label>
+		<label>
+			<input type="checkbox" id="remember-me"/>
+			Remember me? (Save email, phone, password on browser)
 		</label>
 		<input type="submit" class="btn" id="chk-btn" value="Check!"/>
 	</form>
@@ -89,21 +93,32 @@
 
 	<script>
 		$(document).ready(function() {
+			$('#email').val(localStorage.getItem('email'));
+			$('#phone').val(localStorage.getItem('phone'));
+			$('#password').val(localStorage.getItem('password'));
+
 			const loginUrl = 'https://us-central1-mircrocloud.cloudfunctions.net/check-zero1';
 			$('#checkForm').submit(function(e) {
 				e.preventDefault();
 
 				const email = $('#email').val();
-				const password = $('#password').val();
 				const phone = $('#phone').val();
+				const password = $('#password').val();
+
+				if ($('#remember.me').is(':checked')) {
+					console.log('saving details to localStorage...')
+					localStorage.setItem('email', email);
+					localStorage.setItem('phone', phone);
+					localStorage.setItem('password', password);
+				}
 
 				$('#usageGB').text('Checking...');
 
-				axios.post(loginUrl, {email, password, phone})
+				axios.post(loginUrl, {email, phone, password})
 				.then(function (response) {
 					const data = response.data;
 					$('#usageGB').text(Math.round(data['data'] * 100) / 100);
-				}).error(function (err) {
+				}).catch(function (err) {
 					$('#usageGB').text("Error: " + err);
 				});
 			})
