@@ -75,14 +75,17 @@
 			<input type="email" id="email" autofocus/>
 		</label>
 		<label>Phone
-			<input type="tel" id="phone"/>
+			<input type="phone" id="phone"/>
 		</label>
 		<label>Password
 			<input type="password" id="password"/>
 		</label>
+		<label>API Key
+			<input type="password" id="api_key"/>
+		</label>
 		<label>
 			<input type="checkbox" id="remember-me"/>
-			Remember me? (Save email, phone, password on browser)
+			Remember me? (Save email, phone, password, api_key on browser)
 		</label>
 		<input type="submit" class="btn" id="chk-btn" value="Check!"/>
 	</form>
@@ -96,6 +99,7 @@
 			$('#email').val(localStorage.getItem('email'));
 			$('#phone').val(localStorage.getItem('phone'));
 			$('#password').val(localStorage.getItem('password'));
+			$('#api_key').val(localStorage.getItem('api_key'));
 
 			const loginUrl = 'https://us-central1-mircrocloud.cloudfunctions.net/check-zero1';
 			$('#checkForm').submit(function(e) {
@@ -104,17 +108,19 @@
 				const email = $('#email').val();
 				const phone = $('#phone').val();
 				const password = $('#password').val();
+				const api_key = $('#api_key').val();
 
 				if ($('#remember-me').is(':checked')) {
 					console.log('saving details to localStorage...')
 					localStorage.setItem('email', email);
 					localStorage.setItem('phone', phone);
 					localStorage.setItem('password', password);
+					localStorage.setItem('api_key', api_key);
 				}
 
 				$('#usageGB').text('Checking...');
 
-				axios.post(loginUrl, {email, phone, password})
+				axios.post(loginUrl, {email, phone, password, api_key})
 				.then(function (response) {
 					const data = response.data;
 					$('#usageGB').text(Math.round(data['data'] * 100) / 100);
