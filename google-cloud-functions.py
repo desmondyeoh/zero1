@@ -1,12 +1,13 @@
 import json
 import requests
 import flask
-
+import os
 
 # requirements.py
 """
 requests>=2.24
 """
+
 
 def check_data(request):
     
@@ -22,21 +23,25 @@ def check_data(request):
         return ('', 204, headers)
 
     elif request.method == 'POST':
+        
         try:
             request_json = request.get_json()
             email = request_json['email']
             password = request_json['password']
             phone = request_json['phone']
-        
-            # Set CORS headers for the main request
+            api_key = request_json['api_key']
+
+             # Set CORS headers for the main request
             headers = {
                 'Content-Type':'application/json',
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Headers': 'Content-Type',
             }
-
             # END CORS
 
+            if api_key != os.environ.get('SECRET', 'Specified environment variable is not set.'):
+                return ({'msg': 'Invalid API key'}, 401, headers)
+        
             c = Zero1Checker()
             login_success = c.login(email=email, password=password)
             if not login_success:
