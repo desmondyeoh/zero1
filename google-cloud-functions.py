@@ -38,13 +38,15 @@ def check_data(request):
             # END CORS
 
             c = Zero1Checker()
-            c.login(email=email, password=password)
+            login_success = c.login(email=email, password=password)
+            if not login_success:
+                return ({'msg': 'Wrong email / password'}, 401, headers)
             c.authenticate()
             data_usage_GB = c.get_usage(phone_num=phone)
             print('Data used: %.2f GB' % data_usage_GB)
             return ({'data': data_usage_GB}, 200, headers)
         except:
-            return ({'data': 'Internal Server Error'}, 500, headers)
+            return ({'msg': 'Internal Server Error'}, 500, headers)
     
     else:
         return ('Not Found', 404)
