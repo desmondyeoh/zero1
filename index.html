@@ -127,7 +127,7 @@
 			$('#password').val(localStorage.getItem('password'));
 			$('#api_key').val(localStorage.getItem('api_key'));
 			
-			if (localStorage.getItem('email').length > 0) {
+			if (localStorage.getItem('email') && localStorage.getItem('email').length > 0) {
 				checkData();
 			}
 
