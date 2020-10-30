@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Zero1 Data Checker</title>
+    <title>Zero1 Data Checker</title>
 
-    <title>zero1.dyeoh.com</title>
     <meta charset="UTF-8">
     <meta name="title" content="zero1.dyeoh.com">
     <meta name="description" content="Zero1 Data Checker">
@@ -70,6 +69,11 @@
 <body>
 	<h1>Zero1 Data Checker</h1>
 	<p id="desc">Check Zero1 Data Usage Here!</p>
+
+	<p>Data Usage (GB): <span id="usageGB">Unknown</span></p>
+	<p>Days Elapsed: <span id="daysElapsed">-</span></p>
+	<p>Days Left: <span id="daysLeft">-</span></p>
+	
 	<form action="/" id="checkForm">
 		<label>Email
 			<input type="email" id="email" autofocus/>
@@ -89,7 +93,6 @@
 		</label>
 		<input type="submit" class="btn" id="chk-btn" value="Check!"/>
 	</form>
-	<p>Data Usage (GB): <span id="usageGB">Unknown</span></p>
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
@@ -116,6 +119,8 @@
 			.then(function (response) {
 				const data = response.data;
 				$('#usageGB').text(Math.round(data['data'] * 100) / 100);
+				$('#daysElapsed').text(data['days_elapsed']);
+				$('#daysLeft').text(data['days_left']);
 			}).catch(function (err) {
 				$('#usageGB').text("Error: " + err);
 			});
